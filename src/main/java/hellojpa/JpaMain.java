@@ -17,18 +17,13 @@ public class JpaMain {
         tx.begin();
 
         try{
-//            Member findMember = em.find(Member.class, 1L);
-            List<Member> memberList = em.createQuery("select  m from Member m", Member.class)
-                    .setFirstResult(5)
-                    .setMaxResults(10)
-                    .getResultList();
 
-            for (Member member : memberList) {
-                System.out.println("member id = " + member.id);
-                System.out.println("member name = " + member.getName());
-            }
+            Member findMember = em.find(Member.class, 200L);
+            findMember.setName("changed");
 
-            tx.commit();
+            //em.persist(findMember); 필요없음~~~
+            tx.commit(); //commit하는 시점에 쿼리 날라감.
+
         }catch (Exception e){
             tx.rollback();
         }finally {
