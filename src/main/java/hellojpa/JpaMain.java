@@ -17,12 +17,16 @@ public class JpaMain {
         tx.begin();
 
         try{
+            //em.find를 통해 가져온 member는 영속상태
+            Member member = em.find(Member.class, 500L);
+            member.setName("wow");
 
-            Member findMember = em.find(Member.class, 200L);
-            findMember.setName("changed");
-
-            //em.persist(findMember); 필요없음~~~
-            tx.commit(); //commit하는 시점에 쿼리 날라감.
+            //준영속 상태로 바꿈
+            //em.detach(member);
+            em.clear();
+            //commit 할 때 member의 업데이트 반영 안됨.
+            Member member2 = em.find(Member.class, 500L);
+            tx.commit();
 
         }catch (Exception e){
             tx.rollback();
