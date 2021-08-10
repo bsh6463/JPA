@@ -1,7 +1,9 @@
 package hellojpa;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 public class Member {
@@ -22,15 +24,7 @@ public class Member {
         this.userName = userName;
     }
 
-    public Team getTeam() {
-        return team;
-    }
 
-    public void changeTeam(Team team) {
-        this.team = team;
-
-        team.getMemberList().add(this);
-    }
 
     @Id
     @GeneratedValue()
@@ -41,8 +35,15 @@ public class Member {
     private String userName;
 
     @ManyToOne
-    @JoinColumn(name = "TEAM_ID") //Team 객체와 Team FK를 매핑
+    @JoinColumn(name = "TEAM_ID")
     private Team team;
+
+    @OneToOne
+    @JoinColumn(name = "LOCKIER_ID")
+    private Locker locker;
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
 
     //    @Column(name = "TEAM_ID")
 //    private Long teamId;

@@ -15,7 +15,7 @@ public class Team {
 
     private String name;
 
-    @OneToMany(mappedBy = "team") //일대다 매핑에서 나는 뭐랑 연결되어있지? Member 클래스의 Team 필드명.
+    @OneToMany(mappedBy = "team")
     private List<Member> memberList = new ArrayList<>();
 
     public Long getId() {
