@@ -20,18 +20,12 @@ public class JpaMain {
             em.persist(team); //team이 영속상태 되면 id값이 들어감.
 
             Member member = new Member();
-            member.setUserName("member");
-            member.setTeam(team); //set을 통해 연관관계 매핑.
+            member.setUserName("member1");
+            member.changeTeam(team);
             em.persist(member);
 
-            em.flush();
-            em.clear();
-
-
-            //member의 소속 팀 찾기....흠..
-            Member findMember = em.find(Member.class, member.getId());
-
-            List<Member> memberList = findMember.getTeam().getMemberList();
+            Team findTeam = em.find(Team.class, team.getId());
+            List<Member> memberList = findTeam.getMemberList();
             System.out.println("==================");
             for (Member m : memberList) {
 
@@ -39,6 +33,7 @@ public class JpaMain {
 
             }
             System.out.println("==================");
+
             tx.commit();
 
         }catch (Exception e){
