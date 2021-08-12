@@ -15,20 +15,22 @@ public class JpaMain {
         tx.begin();
 
         try{
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
 
             Member member = new Member();
             member.setUserName("hello");
+            member.setTeam(team);
             em.persist(member);
             
             em.flush();
             em.clear();
-            
-            Member refMember = em.getReference(Member.class, member.getId());
-            System.out.println("refMember = " + refMember.getClass()); //프록시
 
-            refMember.getUserName();
-            //초기화 상태
-            System.out.println("isLoaded = " + emf.getPersistenceUnitUtil().isLoaded(refMember));
+         //   Member m = em.find(Member.class, member.getId());
+            List<Member> memberList = em.createQuery("select m from Member m join fetch m.team", Member.class).getResultList();
+
+
 
             tx.commit();
 
