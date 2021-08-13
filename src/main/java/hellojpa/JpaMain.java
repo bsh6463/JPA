@@ -1,8 +1,8 @@
 package hellojpa;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class JpaMain {
 
@@ -15,16 +15,24 @@ public class JpaMain {
         tx.begin();
 
         try{
-
-            Address homeAddress = new Address("city", "street", "321654");
-
             Member member = new Member();
             member.setUserName("member1");
-            member.setAddress(homeAddress);
+            //address 값타입
+            member.setHomeAddress(new Address("homeCity", "street", "sdd2d"));
+
+            //값타입 컬렉션
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("족발");
+            member.getFavoriteFoods().add("피쟈");
+
+            member.getAddressHistory().add(new AddressEntity("city", "street", "zipcode"));
+            member.getAddressHistory().add(new AddressEntity("city2", "street", "zipcode"));
+
             em.persist(member);
 
-            Address newAddress = new Address("newCity", homeAddress.getStreet(), homeAddress.getZipcode());
-            member.setAddress(newAddress);
+            em.flush();
+            em.clear();
+
             tx.commit();
 
         }catch (Exception e){

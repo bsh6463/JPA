@@ -1,10 +1,10 @@
 package hellojpa;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Member {
@@ -21,6 +21,7 @@ public class Member {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEAM_ID")
     private Team team;
+
 
     public Team getTeam() {
         return team;
@@ -40,17 +41,26 @@ public class Member {
     //기간
     @Embedded
     private Period period;
+
     //주소
     @Embedded
-    private Address address;
-    //주소
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "city", column = @Column(name = "HOME_CITY")),
-            @AttributeOverride(name = "street", column = @Column(name = "HOME_STREET")),
-            @AttributeOverride(name = "zipcode", column = @Column(name = "HOME_ZIPCODE"))
-    })
     private Address homeAddress;
+
+    @ElementCollection
+    @CollectionTable(name = "FAVORITE_FOOD",
+            joinColumns = @JoinColumn(name = "MEMBER_ID")) //Collection table에 FK 넣어줌.FK로 잡게됨.
+    @Column(name = "FOOD_NAME")
+    private Set<String> favoriteFoods = new HashSet<>();
+
+//    @ElementCollection
+//    @CollectionTable(name = "ADDRESS",
+//            joinColumns = @JoinColumn(name = "MEMBER_ID"))
+//    private List<Address> addressHistory = new ArrayList<>();
+
+    //일대다 단방향 매핑.
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "MEMBER_ID")
+    private List<AddressEntity> addressHistory = new ArrayList<>();
 
     public Period getPeriod() {
         return period;
@@ -60,12 +70,12 @@ public class Member {
         this.period = period;
     }
 
-    public Address getAddress() {
-        return address;
+    public Address getHomeAddress() {
+        return homeAddress;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setHomeAddress(Address address) {
+        this.homeAddress = address;
     }
 
     public void setId(Long id) {
@@ -80,4 +90,27 @@ public class Member {
         this.userName = userName;
     }
 
+    public List<MemberProduct> getMemberProducts() {
+        return memberProducts;
+    }
+
+    public void setMemberProducts(List<MemberProduct> memberProducts) {
+        this.memberProducts = memberProducts;
+    }
+
+    public Set<String> getFavoriteFoods() {
+        return favoriteFoods;
+    }
+
+    public void setFavoriteFoods(Set<String> favoriteFoods) {
+        this.favoriteFoods = favoriteFoods;
+    }
+
+    public List<AddressEntity> getAddressHistory() {
+        return addressHistory;
+    }
+
+    public void setAddressHistory(List<AddressEntity> addressHistory) {
+        this.addressHistory = addressHistory;
+    }
 }
